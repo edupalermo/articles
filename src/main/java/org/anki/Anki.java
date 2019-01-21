@@ -1,0 +1,142 @@
+package org.anki;
+
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.ClassPathResource;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+
+@SpringBootApplication
+public class Anki {
+
+    public static void main(String[] args) {
+        SpringApplication.run(Anki.class, args);
+    }
+
+    @Bean
+    public CommandLineRunner commandLineRunner(ApplicationContext ctx) throws IOException {
+
+        Map<String, Integer> map = new TreeMap<String, Integer>();
+
+        processArticle("001_guardian.txt", map);
+        processArticle("002_guardian.txt", map);
+
+        dump(sort(map), map);
+
+        return args -> {
+            System.out.println("Let's inspect the beans provided by Spring Boot:");
+        };
+    }
+
+    private void processArticle(String filename, Map<String, Integer> map) {
+        BufferedReader br = null;
+
+        try {
+            br = new BufferedReader(new InputStreamReader(new ClassPathResource(filename).getInputStream()));
+            String line = null;
+
+            while ((line = br.readLine()) != null) {
+                process(map, line);
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+
+    }
+
+    private void process(Map<String, Integer> map, String line) {
+        Set ignore = loaddSet("ignore.txt");
+        for (String word : line.split("\\s|“|”|\\.|,|’|–|'|‘|:|\\(|\\)")) {
+            if ((word != null) && (word.trim().length() > 0) && (!ignore.contains(word.trim().toUpperCase()))) {
+                String treated = word.trim().toUpperCase();
+                if (map.containsKey(treated)) {
+                    map.put(treated, Integer.valueOf(map.get(treated).intValue() + 1));
+                }
+                else {
+                    map.put(treated, Integer.valueOf(1));
+                }
+            }
+        }
+    }
+
+    private List<String> sort(Map<String, Integer> map) {
+        List<String> list = new ArrayList<>();
+        for (Map.Entry<String, Integer> each : map.entrySet()) {
+
+            int pos = 0;
+
+            while ((pos < list.size()) &&
+                    (map.get(each.getKey()).intValue() <= map.get(list.get(pos)).intValue()) &&
+                    (each.getKey().compareTo(list.get(pos)) > 0)) {
+                pos++;
+            }
+
+            list.add(pos, each.getKey());
+        }
+        return list;
+    }
+
+    public void dump(List<String> list, Map<String, Integer> map) {
+        for (String word : list) {
+            System.out.println(String.format("%03d - %s", map.get(word).intValue(), word));
+        }
+    }
+
+    public void dump(Map<String, Integer> map) {
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            System.out.println(String.format("%03d - %s", entry.getValue().intValue(), entry.getKey()));
+        }
+    }
+
+    private Set<String> loaddSet(String filename) {
+        Set<String> set = new TreeSet<>();
+        BufferedReader br = null;
+
+        try {
+            br = new BufferedReader(new InputStreamReader(new ClassPathResource(filename).getInputStream()));
+
+            String line = null;
+
+            while ((line = br.readLine()) != null) {
+                if (line.trim().length() > 0) {
+                    set.add(line.trim().toUpperCase());
+                }
+            }
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+
+        return set;
+    }
+}
