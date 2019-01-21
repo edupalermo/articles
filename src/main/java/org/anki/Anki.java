@@ -10,15 +10,16 @@ import org.springframework.core.io.ClassPathResource;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 @SpringBootApplication
 public class Anki {
+
+    private static final String[] ENGLISH_ARTICLES = new String[] {
+            "001_guardian.txt",
+            "002_guardian.txt"
+    };
+
 
     public static void main(String[] args) {
         SpringApplication.run(Anki.class, args);
@@ -27,10 +28,15 @@ public class Anki {
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) throws IOException {
 
+
+        Set ignoreSet = loadSet("ignore.txt");
+
+
         Map<String, Integer> map = new TreeMap<String, Integer>();
 
-        processArticle("001_guardian.txt", map);
-        processArticle("002_guardian.txt", map);
+        for (String filename : ENGLISH_ARTICLES) {
+            processArticle(filename, map, ignoreSet);
+        }
 
         dump(sort(map), map);
 
@@ -39,7 +45,7 @@ public class Anki {
         };
     }
 
-    private void processArticle(String filename, Map<String, Integer> map) {
+    private void processArticle(String filename, Map<String, Integer> map, Set<String> ignoreSet) {
         BufferedReader br = null;
 
         try {
@@ -47,7 +53,7 @@ public class Anki {
             String line = null;
 
             while ((line = br.readLine()) != null) {
-                process(map, line);
+                process(map, ignoreSet, line);
             }
 
         } catch (IOException e) {
@@ -65,10 +71,9 @@ public class Anki {
 
     }
 
-    private void process(Map<String, Integer> map, String line) {
-        Set ignore = loaddSet("ignore.txt");
+    private void process(Map<String, Integer> map, Set<String> ignoreSet, String line) {
         for (String word : line.split("\\s|“|”|\\.|,|’|–|'|‘|:|\\(|\\)")) {
-            if ((word != null) && (word.trim().length() > 0) && (!ignore.contains(word.trim().toUpperCase()))) {
+            if ((word != null) && (word.trim().length() > 0) && (!ignoreSet.contains(word.trim().toUpperCase()))) {
                 String treated = word.trim().toUpperCase();
                 if (map.containsKey(treated)) {
                     map.put(treated, Integer.valueOf(map.get(treated).intValue() + 1));
@@ -109,7 +114,7 @@ public class Anki {
         }
     }
 
-    private Set<String> loaddSet(String filename) {
+    private Set<String> loadSet(String filename) {
         Set<String> set = new TreeSet<>();
         BufferedReader br = null;
 
@@ -139,4 +144,30 @@ public class Anki {
 
         return set;
     }
+
+    private void stat(String[] articles) {
+        for (String filename : articles) {
+            statFile(filename);
+        }
+    }
+
+    private void statFile(String filename) {
+        System.out.println("File: " + filename);
+    }
+
+
+    private void countWords(Map<String, Integer> map, String line) {
+        for (String word : line.split("\\s|“|”|\\.|,|’|–|'|‘|:|\\(|\\)")) {
+            if ((word != null) && (word.trim().length() > 0)) {
+                String treated = word.trim().toUpperCase();
+                if (map.containsKey(treated)) {
+                    map.put(treated, Integer.valueOf(map.get(treated).intValue() + 1));
+                }
+                else {
+                    map.put(treated, Integer.valueOf(1));
+                }
+            }
+        }
+    }
+
 }
