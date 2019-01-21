@@ -17,7 +17,8 @@ public class Anki {
 
     private static final String[] ENGLISH_ARTICLES = new String[] {
             "001_guardian.txt",
-            "002_guardian.txt"
+            "002_guardian.txt",
+            "003_guardian.txt",
     };
 
 
