@@ -1,4 +1,4 @@
-package org.anki;
+package org.article;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -10,10 +10,14 @@ import org.springframework.core.io.ClassPathResource;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 @SpringBootApplication
-public class Anki {
+public class Application {
 
     private static final String[] ENGLISH_ARTICLES = new String[] {
             "001_guardian.txt",
@@ -23,23 +27,22 @@ public class Anki {
 
 
     public static void main(String[] args) {
-        SpringApplication.run(Anki.class, args);
+        SpringApplication.run(Application.class, args);
     }
 
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) throws IOException {
 
+//        Set ignoreSet = loadSet("ignore.txt");
 
-        Set ignoreSet = loadSet("ignore.txt");
 
+//        Map<String, Integer> map = new TreeMap<String, Integer>();
 
-        Map<String, Integer> map = new TreeMap<String, Integer>();
+//        for (String filename : ENGLISH_ARTICLES) {
+//            processArticle(filename, map, ignoreSet);
+//        }
 
-        for (String filename : ENGLISH_ARTICLES) {
-            processArticle(filename, map, ignoreSet);
-        }
-
-        dump(sort(map), map);
+//        dump(sort(map), map);
 
         return args -> {
             System.out.println("Let's inspect the beans provided by Spring Boot:");

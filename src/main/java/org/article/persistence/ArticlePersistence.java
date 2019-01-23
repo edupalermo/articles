@@ -1,6 +1,6 @@
-package org.anki.persistence;
+package org.article.persistence;
 
-import org.anki.entity.ArticleEntity;
+import org.article.entity.ArticleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;

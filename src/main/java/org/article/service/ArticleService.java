@@ -1,7 +1,7 @@
-package org.anki.service;
+package org.article.service;
 
-import org.anki.entity.ArticleEntity;
-import org.anki.persistence.ArticlePersistence;
+import org.article.entity.ArticleEntity;
+import org.article.persistence.ArticlePersistence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

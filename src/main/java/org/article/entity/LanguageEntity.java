@@ -1,4 +1,4 @@
-package org.anki.entity;
+package org.article.entity;
 
 import lombok.Getter;
 import lombok.Setter;
