@@ -1,5 +1,7 @@
 package org.article;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,6 +20,8 @@ import java.util.TreeSet;
 
 @SpringBootApplication
 public class Application {
+
+    private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
     private static final String[] ENGLISH_ARTICLES = new String[] {
             "001_guardian.txt",
@@ -45,7 +49,7 @@ public class Application {
 //        dump(sort(map), map);
 
         return args -> {
-            System.out.println("Let's inspect the beans provided by Spring Boot:");
+            logger.info("Let's inspect the beans provided by Spring Boot:");
         };
     }
 

@@ -11,7 +11,7 @@ import java.util.List;
 public class ArticlePersistence {
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     public ArticleEntity save(ArticleEntity articleEntity) {
 
