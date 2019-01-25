@@ -4,8 +4,24 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <style>
-        label {
+        * {
+            font-size: 25px;
+            font-family: "Courier New";
+        }
+        .singleColumn {
             display: block;
+        }
+        .col_1_2 {
+            display: inline;
+            width: 300px;
+        }
+        .col_2_2 {
+            display: block;
+            width: 300px;
+        }
+        #content {
+            width: 500px;
+            height: 300px;
         }
     </style>
 
@@ -14,17 +30,31 @@
         function validate() {
             var valid = true;
 
-            if (!$("input[name='language']").val()) {
-                $("language_msg").text("Language cannot be empty!");
+            if (!$("select[name='languageId']").val()) {
+                $("#languageId_msg").text("Language cannot be empty!");
                 valid = false;
+            }
+            else {
+                $("#languageId_msg").empty();
             }
 
             if (!$("input[name='title']").val()) {
-                $("language_msg").text("Title cannot be empty!");
+                $("#title_msg").text("Title cannot be empty!");
                 valid = false;
             }
+            else {
+                $("#title_msg").empty();
+            }
 
-            console.log("Tried to validate!");
+            if (!$("textarea[name='content']").val()) {
+                $("#content_msg").text("Content cannot be empty!");
+                valid = false;
+            }
+            else {
+                $("#content_msg").empty();
+            }
+
+            console.log("Tried to validate 2! " + valid);
             return valid;
         }
 
@@ -34,29 +64,52 @@
 
 </head>
 <body>
-<form action="create" onsubmit="return validate()">
+<form action="create" onsubmit="return validate()" th:object="${form}" method="post">
 
-    <label>Language</label>
-    <select name="languageId">
-        <option value="">Select the language</option>
-        <option th:each="language : ${languages}" th:value="${language.id}" th:text="${language.name}"></option>
-    </select>
-    <div id="language_msg"></div>
+    <div class="col_1_2">
+        <label for="languageId">Language</label>
+    </div>
+    <div class="col_2_2">
+        <select th:field="*{languageId}">
+            <option value="">Select the language</option>
+            <option th:each="language : ${languages}" th:value="${language.id}" th:text="${language.name}"></option>
+        </select>
+    </div>
+    <div class="singleColumn" id="languageId_msg"></div>
 
-    <label>Title</label>
-    <input name="title" type="text" />
+
+    <div class="col_1_2">
+        <label for="isPublic">Public</label>
+    </div>
+    <div class="col_2_2">
+        <input type="checkbox" th:field="*{isPublic}"/>
+    </div>
+
+    <div class="col_1_2">
+        <label for="title">Title</label>
+    </div>
+    <div class="col_2_2">
+        <input th:field="*{title}" type="text" />
+    </div>
     <div id="title_msg"></div>
 
-    <label>Reference</label>
-    <input name="reference" type="text" />
+    <div class="col_1_2">
+        <label for="reference">Reference</label>
+    </div>
+    <div class="col_2_2">
+        <input type="text" th:field="*{reference}" />
+    </div>
 
-    <label>Public</label>
-    <input name="public" type="checkbox"/>
+    <div class="singleColumn">
+        <label for="content">Content</label><div id="content_msg"></div>
+    </div>
+    <div class="singleColumn">
+        <textarea th:field="*{content}"></textarea>
+    </div>
 
-    <label>Content</label>
-    <textarea name="content"></textarea>
-
-    <input type="submit" value="--> Submit">
+    <div class="singleColumn">
+        <input type="submit" value="Submit">
+    </div>
 
 </form>
 </body>

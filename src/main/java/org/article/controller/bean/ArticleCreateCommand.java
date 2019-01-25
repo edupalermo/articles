@@ -1,6 +1,6 @@
 package org.article.controller.bean;
 
-public class ArticleCreateBean {
+public class ArticleCreateCommand {
     private String name;
     private Long languageId;
     private String title;
@@ -40,12 +40,12 @@ public class ArticleCreateBean {
         this.reference = reference;
     }
 
-    public Boolean getPublic() {
+    public Boolean getIsPublic() {
         return isPublic;
     }
 
-    public void setPublic(Boolean aPublic) {
-        isPublic = aPublic;
+    public void setIsPublic(Boolean isPublic) {
+        this.isPublic = isPublic;
     }
 
     public String getContent() {
