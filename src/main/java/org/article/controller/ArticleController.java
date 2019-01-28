@@ -88,4 +88,11 @@ public class ArticleController {
         return "article/list";
     }
 
+    @GetMapping("/show")
+    public String show(Model model, @ModelAttribute("id") Long articleId) {
+        model.addAttribute("article", articleService.findById(articleId)
+                .orElseThrow(() -> new IllegalStateException(String.format("It was not found an article with id [%s]", articleId.toString()))));
+        return "article/show";
+    }
+
 }

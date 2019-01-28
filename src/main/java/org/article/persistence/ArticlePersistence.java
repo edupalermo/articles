@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ArticlePersistence {
@@ -56,6 +57,12 @@ public class ArticlePersistence {
     public List<ArticleEntity> findAll() {
         String sql = "SELECT ID, LANGUAGE_ID, SYSTEM_USER_ID, TITLE, PUBLIC, CONTENT, REFERENCE, CREATED FROM ARTICLE";
         return jdbcTemplate.query(sql, rowMapper);
+    }
+
+    public Optional<ArticleEntity> findById(Long articleId) {
+        String sql = "SELECT ID, LANGUAGE_ID, SYSTEM_USER_ID, TITLE, PUBLIC, CONTENT, REFERENCE, CREATED FROM ARTICLE WHERE ID = ?";
+        Object args[] = new Object[] {articleId};
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, args));
     }
 
 }

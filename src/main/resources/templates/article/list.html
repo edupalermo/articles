@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{/layout/default}">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -25,55 +25,22 @@
     </style>
 
     <script>
-
-        function validate() {
-            var valid = true;
-
-            if (!$("select[name='languageId']").val()) {
-                $("#languageId_msg").text("Language cannot be empty!");
-                valid = false;
-            }
-            else {
-                $("#languageId_msg").empty();
-            }
-
-            if (!$("input[name='title']").val()) {
-                $("#title_msg").text("Title cannot be empty!");
-                valid = false;
-            }
-            else {
-                $("#title_msg").empty();
-            }
-
-            if (!$("textarea[name='content']").val()) {
-                $("#content_msg").text("Content cannot be empty!");
-                valid = false;
-            }
-            else {
-                $("#content_msg").empty();
-            }
-
-            console.log("Tried to validate 2! " + valid);
-            return valid;
-        }
-
-
-
     </script>
 
 </head>
 <body>
 <form action="create" onsubmit="return validate()" method="post">
-<table>
+
+<table layout:fragment="content">
     <tr>
         <td>Delete</td>
         <td>Title</td>
         <td>Created</td>
     </tr>
-    <tr th:each="article : ${article}">
+    <tr th:each="article : ${articles}">
         <td><input type="checkbox" name="id" th:value="${article.id}"></td>
-        <td th:text="${article.text}"></td>
-        <td th:text="${#dates.format(article.created, 'dd-MM-yyyy HH:mm:ss')}">Created</td>
+        <td><a th:href="'show?id=' + ${article.id}" th:text="${article.title}" /></td>
+        <td th:text="${#temporals.format(article.created, 'dd-MM-yyyy HH:mm:ss')}">Created</td>
     </tr>
 </table>
 </form>

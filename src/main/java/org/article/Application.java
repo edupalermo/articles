@@ -1,5 +1,6 @@
 package org.article;
 
+import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -8,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -49,8 +51,15 @@ public class Application {
 //        dump(sort(map), map);
 
         return args -> {
-            logger.info("Let's inspect the beans provided by Spring Boot:");
+            logger.info("Start up hook executed.");
         };
+    }
+
+    @Bean
+    public SpringTemplateEngine templateEngine() {
+        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+        templateEngine.addDialect(new LayoutDialect());
+        return templateEngine;
     }
 
     private void processArticle(String filename, Map<String, Integer> map, Set<String> ignoreSet) {
