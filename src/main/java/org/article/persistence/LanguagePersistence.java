@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class LanguagePersistence {
@@ -26,8 +27,14 @@ public class LanguagePersistence {
         }
     };
 
-    public List<LanguageEntity> get() {
+    public List<LanguageEntity> findAll() {
         return this.jdbcTemplate.query("SELECT ID, NAME FROM LANGUAGE", rowMapper);
+    }
+
+    public Optional<LanguageEntity> findById(Long id) {
+        String query = "SELECT ID, NAME FROM LANGUAGE WHERE ID = ?";
+        Object[] parameters = new Object[]{id};
+        return Optional.ofNullable(this.jdbcTemplate.queryForObject(query, rowMapper, parameters));
     }
 
 }

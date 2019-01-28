@@ -2,8 +2,12 @@ package org.article.controller;
 
 import org.article.Application;
 import org.article.controller.bean.ArticleCreateCommand;
+import org.article.entity.ArticleEntity;
+import org.article.entity.LanguageEntity;
+import org.article.entity.SystemUserEntity;
 import org.article.service.ArticleService;
 import org.article.service.LanguageService;
+import org.article.service.SystemUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +17,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/article")
@@ -26,6 +32,11 @@ public class ArticleController {
     @Autowired
     private LanguageService languageService;
 
+    @Autowired
+    private SystemUserService systemUserService;
+
+    private static final String DEFAULT_LOGIN = "palermo";
+
     @GetMapping("/create")
     public String create(Model model) {
         populateFormData(model);
@@ -35,6 +46,7 @@ public class ArticleController {
     @PostMapping("/create")
     public String create(Model model, ArticleCreateCommand articleCreateCommand) {
         logger.info("Language: " + articleCreateCommand.getLanguageId());
+        articleService.save(map(articleCreateCommand));
         populateFormData(model, articleCreateCommand);
         return "article/create";
     }
@@ -45,14 +57,35 @@ public class ArticleController {
 
     private void populateFormData(Model model, ArticleCreateCommand articleCreateCommand) {
         model.addAttribute("form", articleCreateCommand);
-        model.addAttribute("languages", languageService.get());
     }
 
     @ModelAttribute("languages")
-    public String[] getLanguages() {
-        return new String[] {
-                "Monday", "Tuesday", "Wednesday", "Thursday",
-                "Friday", "Saturday", "Sunday"
-        };
+    public List<LanguageEntity> getLanguages() {
+        return languageService.findAll();
     }
+
+    public ArticleEntity map(ArticleCreateCommand articleCreateCommand) {
+        LanguageEntity languageEntity = languageService.findById(articleCreateCommand.getLanguageId())
+                .orElseThrow(() -> new IllegalStateException(String.format("It was not found a Language with id [%s]", articleCreateCommand.getLanguageId())));
+
+        SystemUserEntity systemUserEntity = systemUserService.findByLogin(DEFAULT_LOGIN)
+                .orElseThrow(() -> new IllegalStateException(String.format("It was not found a User with login [%s]", DEFAULT_LOGIN)));
+
+        ArticleEntity articleEntity = new ArticleEntity();
+        articleEntity.setContent(articleCreateCommand.getContent());
+        articleEntity.setLanguageEntity(languageEntity);
+        articleEntity.setReference(articleCreateCommand.getReference());
+        articleEntity.setIdPublic(articleCreateCommand.getIsPublic());
+        articleEntity.setTitle(articleCreateCommand.getTitle());
+        articleEntity.setSystemUserEntity(systemUserEntity);
+
+        return articleEntity;
+    }
+
+    @GetMapping("/list")
+    public String list(Model model) {
+        model.addAttribute("articles", articleService.findAll());
+        return "article/list";
+    }
+
 }

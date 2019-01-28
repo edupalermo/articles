@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LanguageService {
@@ -13,7 +14,11 @@ public class LanguageService {
     @Autowired
     private LanguagePersistence languagePersistence;
 
-    public List<LanguageEntity> get() {
-        return languagePersistence.get();
+    public List<LanguageEntity> findAll() {
+        return languagePersistence.findAll();
+    }
+
+    public Optional<LanguageEntity> findById(Long id) {
+        return languagePersistence.findById(id);
     }
 }

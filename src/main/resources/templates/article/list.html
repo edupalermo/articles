@@ -63,46 +63,19 @@
 
 </head>
 <body>
-<form action="create" onsubmit="return validate()" th:object="${form}" method="post">
-
-    <div>
-        <label for="languageId" class="col_300">Language</label>
-        <select th:field="*{languageId}">
-            <option value="">Select the language</option>
-            <option th:each="language : ${languages}" th:value="${language.id}" th:text="${language.name}"></option>
-        </select>
-    </div>
-    <div id="languageId_msg" class="displayBlock"></div>
-
-
-    <div>
-        <label for="isPublic" class="col_300">Public</label>
-        <input type="checkbox" th:field="*{isPublic}" />
-    </div>
-
-
-    <div>
-        <label for="title" class="col_300">Title</label>
-        <input th:field="*{title}" type="text"/>
-    </div>
-    <div id="title_msg" class="displayBlock"></div>
-
-    <div>
-        <label for="reference" class="col_300">Reference</label>
-        <input type="text" th:field="*{reference}" />
-    </div>
-
-    <div>
-        <label for="content">Content</label><div id="content_msg"></div>
-    </div>
-    <div>
-        <textarea th:field="*{content}"></textarea>
-    </div>
-
-    <div>
-        <input type="submit" value="Submit">
-    </div>
-
+<form action="create" onsubmit="return validate()" method="post">
+<table>
+    <tr>
+        <td>Delete</td>
+        <td>Title</td>
+        <td>Created</td>
+    </tr>
+    <tr th:each="article : ${article}">
+        <td><input type="checkbox" name="id" th:value="${article.id}"></td>
+        <td th:text="${article.text}"></td>
+        <td th:text="${#dates.format(article.created, 'dd-MM-yyyy HH:mm:ss')}">Created</td>
+    </tr>
+</table>
 </form>
 </body>
 </html>

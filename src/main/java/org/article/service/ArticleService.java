@@ -13,8 +13,8 @@ public class ArticleService {
     @Autowired
     private ArticlePersistence articlePersistence;
 
-    public List<ArticleEntity> list() {
-        return articlePersistence.list();
+    public List<ArticleEntity> findAll() {
+        return articlePersistence.findAll();
     }
 
     public ArticleEntity save(ArticleEntity articleBean) {
