@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-//@RequestMapping("/article")
+@RequestMapping("/article")
 public class ArticleController {
 
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -85,7 +85,7 @@ public class ArticleController {
     @GetMapping("/list")
     public String list(Model model) {
         model.addAttribute("articles", articleService.findAll());
-        return "list";
+        return "article/list";
     }
 
     @GetMapping("/show")

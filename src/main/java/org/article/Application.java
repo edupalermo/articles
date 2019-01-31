@@ -4,24 +4,19 @@ import nz.net.ultraq.thymeleaf.LayoutDialect;
 import nz.net.ultraq.thymeleaf.decorators.strategies.GroupingStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
-import org.thymeleaf.spring4.SpringTemplateEngine;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
-@SpringBootApplication
+@SpringBootApplication @Configuration
 public class Application {
 
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -38,29 +33,8 @@ public class Application {
     }
 
     @Bean
-    public CommandLineRunner commandLineRunner(ApplicationContext ctx) throws IOException {
-
-//        Set ignoreSet = loadSet("ignore.txt");
-
-
-//        Map<String, Integer> map = new TreeMap<String, Integer>();
-
-//        for (String filename : ENGLISH_ARTICLES) {
-//            processArticle(filename, map, ignoreSet);
-//        }
-
-//        dump(sort(map), map);
-
-        return args -> {
-            logger.info("Start up hook executed.");
-        };
-    }
-
-    @Bean
-    public SpringTemplateEngine templateEngine() {
-        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-        templateEngine.addDialect(new LayoutDialect(new GroupingStrategy()));
-        return templateEngine;
+    public LayoutDialect layoutDialect() {
+        return new LayoutDialect();
     }
 
     private void processArticle(String filename, Map<String, Integer> map, Set<String> ignoreSet) {
