@@ -2,6 +2,7 @@ package org.article.controller;
 
 import org.article.Application;
 import org.article.controller.bean.ArticleCreateCommand;
+import org.article.controller.command.ArticleCreateCommand;
 import org.article.entity.ArticleEntity;
 import org.article.entity.LanguageEntity;
 import org.article.entity.SystemUserEntity;
