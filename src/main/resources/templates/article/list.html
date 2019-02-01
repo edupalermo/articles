@@ -36,7 +36,7 @@
 <form action="create" onsubmit="return validate()" method="post">
 
     <section layout:fragment="content">
-        <table>
+        <table th:if="${not #lists.isEmpty(articles)}">
             <tr>
                 <td>Delete</td>
                 <td>Title</td>
@@ -48,6 +48,11 @@
                 <td th:text="${#temporals.format(article.created, 'dd-MM-yyyy HH:mm:ss')}">Created</td>
             </tr>
         </table>
+
+        <p th:if="${#lists.isEmpty(articles)}">There is no article saved!</p>
+
+        <a href="/article/create">CREATE</a>
+
     </section>
 </form>
 </body>

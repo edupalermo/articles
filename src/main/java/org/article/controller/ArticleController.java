@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -44,11 +46,11 @@ public class ArticleController {
     }
 
     @PostMapping("/create")
-    public String create(Model model, ArticleCreateCommand articleCreateCommand) {
+    public ModelAndView create(Model model, ArticleCreateCommand articleCreateCommand) {
         logger.info("Language: " + articleCreateCommand.getLanguageId());
         articleService.save(map(articleCreateCommand));
         populateFormData(model, articleCreateCommand);
-        return "article/create";
+        return new ModelAndView("redirect:/article/list");
     }
 
     private void populateFormData(Model model) {

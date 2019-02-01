@@ -1,5 +1,7 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -63,46 +65,50 @@
 
 </head>
 <body>
-<form action="create" onsubmit="return validate()" th:object="${form}" method="post">
 
-    <div>
-        <label for="languageId" class="col_300">Language</label>
-        <select th:field="*{languageId}">
-            <option value="">Select the language</option>
-            <option th:each="language : ${languages}" th:value="${language.id}" th:text="${language.name}"></option>
-        </select>
-    </div>
-    <div id="languageId_msg" class="displayBlock"></div>
+<section layout:fragment="content">
 
+    <form action="create" onsubmit="return validate()" th:object="${form}" method="post">
 
-    <div>
-        <label for="isPublic" class="col_300">Public</label>
-        <input type="checkbox" th:field="*{isPublic}" />
-    </div>
+        <div>
+            <label for="languageId" class="col_300">Language</label>
+            <select th:field="*{languageId}">
+                <option value="">Select the language</option>
+                <option th:each="language : ${languages}" th:value="${language.id}" th:text="${language.name}"></option>
+            </select>
+        </div>
+        <div id="languageId_msg" class="displayBlock"></div>
 
 
-    <div>
-        <label for="title" class="col_300">Title</label>
-        <input th:field="*{title}" type="text"/>
-    </div>
-    <div id="title_msg" class="displayBlock"></div>
+        <div>
+            <label for="isPublic" class="col_300">Public</label>
+            <input type="checkbox" th:field="*{isPublic}" />
+        </div>
 
-    <div>
-        <label for="reference" class="col_300">Reference</label>
-        <input type="text" th:field="*{reference}" />
-    </div>
 
-    <div>
-        <label for="content">Content</label><div id="content_msg"></div>
-    </div>
-    <div>
-        <textarea th:field="*{content}"></textarea>
-    </div>
+        <div>
+            <label for="title" class="col_300">Title</label>
+            <input th:field="*{title}" type="text"/>
+        </div>
+        <div id="title_msg" class="displayBlock"></div>
 
-    <div>
-        <input type="submit" value="Submit">
-    </div>
+        <div>
+            <label for="reference" class="col_300">Reference</label>
+            <input type="text" th:field="*{reference}" />
+        </div>
 
-</form>
+        <div>
+            <label for="content">Content</label><div id="content_msg"></div>
+        </div>
+        <div>
+            <textarea th:field="*{content}"></textarea>
+        </div>
+
+        <div>
+            <input type="submit" value="Submit">
+        </div>
+
+    </form>
+</section>
 </body>
 </html>

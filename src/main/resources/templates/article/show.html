@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -64,9 +64,12 @@
 </head>
 <body>
 
-<h1 th:text="${article.title}"></h1>
 
-<table>
+<section layout:fragment="content">
+
+    <h1 th:text="${article.title}"></h1>
+
+    <table>
     <tr>
         <td>Reference</td>
         <td th:text="${article.reference}"></td>
@@ -75,10 +78,12 @@
         <td>Created</td>
         <td th:text="${#temporals.format(article.created, 'dd-MM-yyyy HH:mm:ss')}"></td>
     </tr>
-</table>
+    </table>
 
-<pre th:text="${article.content}"></pre>
+    <pre th:text="${article.content}"></pre>
 
+
+</section>
 
 
 </body>
