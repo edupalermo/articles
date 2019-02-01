@@ -7,6 +7,7 @@ import org.article.entity.LanguageEntity;
 import org.article.entity.SystemUserEntity;
 import org.article.service.ArticleService;
 import org.article.service.LanguageService;
+import org.article.service.ParameterService;
 import org.article.service.SystemUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,9 @@ public class ArticleController {
 
     @Autowired
     private LanguageService languageService;
+
+    @Autowired
+    private ParameterService parameterService;
 
     @Autowired
     private SystemUserService systemUserService;
@@ -96,5 +100,4 @@ public class ArticleController {
                 .orElseThrow(() -> new IllegalStateException(String.format("It was not found an article with id [%s]", articleId.toString()))));
         return "article/show";
     }
-
 }

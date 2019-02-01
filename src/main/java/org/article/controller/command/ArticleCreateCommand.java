@@ -1,4 +1,4 @@
-package org.article.controller.bean;
+package org.article.controller.command;
 
 public class ArticleCreateCommand {
     private String name;

@@ -67,6 +67,10 @@
 
 <section layout:fragment="content">
 
+    <form action="">
+
+    <input type="hidden" name="articleId" th:value="${article.id}" />
+
     <h1 th:text="${article.title}"></h1>
 
     <table>
@@ -82,7 +86,9 @@
 
     <pre th:text="${article.content}"></pre>
 
-
+    <h2>Mark words</h2>
+        <p><span>1</span><span>2</span></p>
+    </form>
 </section>
 
 

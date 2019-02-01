@@ -36,5 +36,4 @@ public class LanguagePersistence {
         Object[] parameters = new Object[]{id};
         return Optional.ofNullable(this.jdbcTemplate.queryForObject(query, rowMapper, parameters));
     }
-
 }
