@@ -5,4 +5,4 @@ INSERT INTO LANGUAGE (NAME) VALUES ('German');
 INSERT INTO LANGUAGE (NAME) VALUES ('Italian');
 INSERT INTO LANGUAGE (NAME) VALUES ('Portuguese');
 
-INSERT INTO PARAMETER (KEY, VALUE) VALUES ('SEPARATOR', '\\s|“|”|\\.|,|’|–|''|‘|:|\\(|\\)');
+INSERT INTO PARAMETER (KEY, VALUE) VALUES ('SEPARATOR', '\\\\s|“|”|\\\\.|,|’|–|''|‘|:|\\\\(|\\\\)');

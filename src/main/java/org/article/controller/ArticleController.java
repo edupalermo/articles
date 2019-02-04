@@ -126,10 +126,10 @@ public class ArticleController {
     }
 
     private List<WordCountBean> getUntreatedWords(ArticleEntity articleEntity, List<WordEntity> wordEntityList) {
-        String separator = parameterService.findByKey(ParameterService.KEY_SEPARATOR).getValue();
-        return count(Arrays.stream(articleEntity.getContent().split(separator))
+        return count(Arrays.stream(articleEntity.getContent().split("\\s|“|”|\\.|,|’|–|'|‘|:|\\(|\\)"))
+                .filter(s -> (s != null) && (s.trim().length() > 0))
+                .map(s -> s.trim().toUpperCase())
                 .filter(s -> !wordEntityList.stream().map(WordEntity::getWord).filter(word -> word.equalsIgnoreCase(s)).findAny().isPresent())
-                .map(String::toUpperCase)
                 .collect(Collectors.toList()));
     }
 
