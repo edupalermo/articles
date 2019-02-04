@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class WordService {
@@ -15,6 +16,10 @@ public class WordService {
     private WordPersistence wordPersistence;
 
     public List<WordEntity> findBySystemUser(SystemUserEntity systemUserEntity) {
-        return wordPersistence.findBySystemUser(systemUserEntity);
+        return wordPersistence.find(systemUserEntity);
+    }
+
+    public List<WordEntity> save(List<WordEntity> wordEntityList) {
+        return wordEntityList.stream().map((e) -> wordPersistence.save(e)).collect(Collectors.toList());
     }
 }

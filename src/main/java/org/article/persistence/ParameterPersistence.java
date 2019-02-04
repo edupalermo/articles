@@ -18,7 +18,7 @@ public class ParameterPersistence {
         ParameterEntity parameterEntity = new ParameterEntity();
         parameterEntity.setId(rs.getLong("ID"));
         parameterEntity.setKey(rs.getString("KEY"));
-        parameterEntity.setValue(rs.getString("VAULE"));
+        parameterEntity.setValue(rs.getString("VALUE"));
         return parameterEntity;
     };
 

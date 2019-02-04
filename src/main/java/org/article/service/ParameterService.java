@@ -10,11 +10,13 @@ import java.util.Optional;
 @Component
 public class ParameterService {
 
+    public static final String KEY_SEPARATOR = "SEPARATOR";
+
     @Autowired
     private ParameterPersistence parameterPersistence;
 
-    public Optional<ParameterEntity> findByKey(String key) {
-        return parameterPersistence.findByKey(key);
+    public ParameterEntity findByKey(String key) {
+        return parameterPersistence.findByKey(key).orElseThrow(() -> new RuntimeException(String.format("Parameter with key [%s] not found.", key)));
     }
 
 }

@@ -67,7 +67,7 @@
 
 <section layout:fragment="content">
 
-    <form action="">
+    <form action="/word/update">
 
     <input type="hidden" name="articleId" th:value="${article.id}" />
 
@@ -87,7 +87,7 @@
     <pre th:text="${article.content}"></pre>
 
     <h2>Mark words</h2>
-        <p><span>1</span><span>2</span></p>
+        <p th:each="word : ${words}"><input type="checkbox" name="word" th:value="${word.word}" /><span th:text="${word.count}" /><span th:text="${word.word}" /></p>
     </form>
 </section>
 
