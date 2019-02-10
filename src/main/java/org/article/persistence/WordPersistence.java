@@ -1,5 +1,7 @@
 package org.article.persistence;
 
+import org.article.controller.bean.WordCountBean;
+import org.article.entity.ArticleEntity;
 import org.article.entity.LanguageEntity;
 import org.article.entity.SystemUserEntity;
 import org.article.entity.WordEntity;
@@ -9,8 +11,13 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 @Component
 public class WordPersistence {
@@ -49,4 +56,5 @@ public class WordPersistence {
         jdbcTemplate.update("INSERT INTO WORD (LANGUAGE_ID, SYSTEM_USER_ID, WORD) VALUES (?, ?, ?)", args);
         return find(wordEntity.getLanguageEntity(), wordEntity.getSystemUserEntity(), wordEntity.getWord()).orElseThrow(() -> new RuntimeException("Fail to insert into table"));
     }
+
 }

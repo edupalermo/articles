@@ -110,8 +110,8 @@ public class ArticleController {
         return "article/show";
     }
 
-    @GetMapping("/update")
-    public String show(Model model, WordUpdateCommand wordUpdateCommand) {
+    @PostMapping("/word/add")
+    public String addWords(Model model, WordUpdateCommand wordUpdateCommand) {
 
         logger.info("Word List: " + wordUpdateCommand.getWord());
 
