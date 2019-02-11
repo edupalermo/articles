@@ -1,95 +1,35 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <style>
-        * {
-            font-size: 25px;
-            font-family: "Courier New";
-        }
-        .displayBlock {
-            display: block;
-        }
-        .displayInline {
-            display: inline;
-        }
-        .col_300 {
-            width: 200px;
-            display: inline-block;
-        }
-        #content {
-            width: 500px;
-            height: 300px;
-        }
-    </style>
-
-    <script>
-
-        function validate() {
-            var valid = true;
-
-            if (!$("select[name='languageId']").val()) {
-                $("#languageId_msg").text("Language cannot be empty!");
-                valid = false;
-            }
-            else {
-                $("#languageId_msg").empty();
-            }
-
-            if (!$("input[name='title']").val()) {
-                $("#title_msg").text("Title cannot be empty!");
-                valid = false;
-            }
-            else {
-                $("#title_msg").empty();
-            }
-
-            if (!$("textarea[name='content']").val()) {
-                $("#content_msg").text("Content cannot be empty!");
-                valid = false;
-            }
-            else {
-                $("#content_msg").empty();
-            }
-
-            console.log("Tried to validate 2! " + valid);
-            return valid;
-        }
-
-
-
-    </script>
-
-</head>
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
 <body>
-
-
 <section layout:fragment="content">
 
     <form action="/article/word/add" method="POST">
 
-    <input type="hidden" name="articleId" th:value="${article.id}" />
+        <input type="hidden" name="articleId" th:value="${article.id}" />
 
-    <h1 th:text="${article.title}"></h1>
+        <h1 th:text="${article.title}"></h1>
 
-    <table>
-    <tr>
-        <td>Reference</td>
-        <td th:text="${article.reference}"></td>
-    </tr>
-    <tr>
-        <td>Created</td>
-        <td th:text="${#temporals.format(article.created, 'dd-MM-yyyy HH:mm:ss')}"></td>
-    </tr>
-    </table>
+        <table>
+        <tr>
+            <td>Reference</td>
+            <td th:text="${article.reference}"></td>
+        </tr>
+        <tr>
+            <td>Created</td>
+            <td th:text="${#temporals.format(article.created, 'dd-MM-yyyy HH:mm:ss')}"></td>
+        </tr>
+        </table>
 
-    <pre th:text="${article.content}"></pre>
+        <pre th:text="${article.content}"></pre>
 
-    <h2>Mark words</h2>
-        <p th:each="word : ${words}"><input type="checkbox" name="word" th:value="${word.word}" /><span th:text="${word.count}" /> - <span th:text="${word.word}" /></p>
+        <h2>Mark words</h2>
+            <p th:each="word : ${words}"><input type="checkbox" name="words" th:value="${word.word}" /><span th:text="${word.count}" /> - <span th:text="${word.word}" /></p>
 
-        <input type="submit" value="Save" />
+            <input type="submit" value="Save" />
     </form>
 </section>
 

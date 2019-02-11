@@ -4,38 +4,22 @@
         xmlns:th="http://www.thymeleaf.org"
         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
         layout:decorate="~{layout}">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <style>
-        * {
-            font-size: 25px;
-            font-family: "Courier New";
-        }
-        .displayBlock {
-            display: block;
-        }
-        .displayInline {
-            display: inline;
-        }
-        .col_300 {
-            width: 200px;
-            display: inline-block;
-        }
-        #content {
-            width: 500px;
-            height: 300px;
-        }
-    </style>
-
-    <script>
-    </script>
-
-</head>
 <body>
-<form action="create" onsubmit="return validate()" method="post">
-
     <section layout:fragment="content">
+        <form action="/article/list"  method="post" th:object="${form}">
+
+        <table>
+            <tr>
+                <td>Select the language:</td>
+                <td>
+                    <select th:field="*{languageId}" onchange="this.form.submit()">
+                        <option value="">Select a language</option>
+                        <option th:each="language : ${languages}" th:value="${language.id}" th:text="${language.name}"></option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+
         <table th:if="${not #lists.isEmpty(articles)}">
             <tr>
                 <td>Delete</td>
@@ -49,11 +33,11 @@
             </tr>
         </table>
 
-        <p th:if="${#lists.isEmpty(articles)}">There is no article saved!</p>
+        <p th:if="${#lists.isEmpty(articles)}">There is no article available for this language and user!</p>
 
         <a href="/article/create">CREATE</a>
 
+        </form>
     </section>
-</form>
 </body>
 </html>

@@ -2,7 +2,7 @@ package org.article.controller.command;
 
 public class WordUpdateCommand {
     private Long articleId;
-    private String[] word;
+    private String[] words;
 
     public Long getArticleId() {
         return articleId;
@@ -12,11 +12,11 @@ public class WordUpdateCommand {
         this.articleId = articleId;
     }
 
-    public String[] getWord() {
-        return word;
+    public String[] getWords() {
+        return words;
     }
 
-    public void setWord(String[] word) {
-        this.word = word;
+    public void setWords(String[] words) {
+        this.words = words;
     }
 }

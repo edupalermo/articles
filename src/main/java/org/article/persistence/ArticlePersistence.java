@@ -65,4 +65,15 @@ public class ArticlePersistence {
         return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, args));
     }
 
+    public List<ArticleEntity> findByLanguageIdSystemUserLogin(Long languageId, String systemUserLogin) {
+        String sql = "SELECT a.ID, a.LANGUAGE_ID, a.SYSTEM_USER_ID, a.TITLE, a.PUBLIC, a.CONTENT, a.REFERENCE, a.CREATED FROM " +
+                " ARTICLE a " +
+                " inner join SYSTEM_USER u ON a.SYSTEM_USER_ID = u.ID " +
+                " where " +
+                "     a.LANGUAGE_ID = ? " +
+                " and u.LOGIN = ?";
+        Object args[] = new Object[] {languageId, systemUserLogin};
+        return jdbcTemplate.query(sql, args, rowMapper);
+
+    }
 }

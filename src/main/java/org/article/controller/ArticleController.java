@@ -1,13 +1,13 @@
 package org.article.controller;
 
 import org.article.Application;
-import org.article.controller.bean.WordCountBean;
+import org.article.compoundservice.WordCompoundService;
 import org.article.controller.command.ArticleCreateCommand;
+import org.article.controller.command.ArticleListCommand;
 import org.article.controller.command.WordUpdateCommand;
 import org.article.entity.ArticleEntity;
 import org.article.entity.LanguageEntity;
 import org.article.entity.SystemUserEntity;
-import org.article.entity.WordEntity;
 import org.article.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
 
 @Controller
 @RequestMapping("/article")
@@ -44,11 +43,14 @@ public class ArticleController {
     @Autowired
     private WordService wordService;
 
+    @Autowired
+    private WordCompoundService wordCompoundService;
+
     private static final String DEFAULT_LOGIN = "palermo";
 
     @GetMapping("/create")
     public String create(Model model) {
-        populateFormData(model);
+        model.addAttribute("form", new ArticleCreateCommand());
         return "article/create";
     }
 
@@ -56,16 +58,8 @@ public class ArticleController {
     public ModelAndView create(Model model, ArticleCreateCommand articleCreateCommand) {
         logger.info("Language: " + articleCreateCommand.getLanguageId());
         articleService.save(map(articleCreateCommand));
-        populateFormData(model, articleCreateCommand);
-        return new ModelAndView("redirect:/article/list");
-    }
-
-    private void populateFormData(Model model) {
-        populateFormData(model, new ArticleCreateCommand());
-    }
-
-    private void populateFormData(Model model, ArticleCreateCommand articleCreateCommand) {
         model.addAttribute("form", articleCreateCommand);
+        return new ModelAndView("redirect:/article/list");
     }
 
     @ModelAttribute("languages")
@@ -92,64 +86,46 @@ public class ArticleController {
     }
 
     @GetMapping("/list")
-    public String list(Model model) {
-        model.addAttribute("articles", articleService.findAll());
+    public String getList(Model model, ArticleListCommand articleListCommand) {
+        model.addAttribute("articles", articleService.findByLanguageIdSystemUserLogin(articleListCommand.getLanguageId(), DEFAULT_LOGIN));
+        model.addAttribute("form", new ArticleListCommand());
+        return "article/list";
+    }
+
+    @PostMapping("/list")
+    public String postList(Model model, ArticleListCommand articleListCommand) {
+        model.addAttribute("articles", articleService.findByLanguageIdSystemUserLogin(articleListCommand.getLanguageId(), DEFAULT_LOGIN));
+        model.addAttribute("form", new ArticleListCommand());
         return "article/list";
     }
 
     @GetMapping("/show")
     public String show(Model model, @ModelAttribute("id") Long articleId) {
 
-        SystemUserEntity systemUserEntity = systemUserService.findByLogin(DEFAULT_LOGIN).orElseThrow(() -> new RuntimeException("User not found"));
-
         ArticleEntity articleEntity = articleService.findById(articleId)
                 .orElseThrow(() -> new IllegalStateException(String.format("It was not found an article with id [%s]", articleId)));
 
         model.addAttribute("article", articleEntity);
-        model.addAttribute("words", getUntreatedWords(articleEntity, wordService.findBySystemUser(systemUserEntity)));
+        model.addAttribute("words", wordCompoundService.getUntreatedWords(articleEntity, DEFAULT_LOGIN));
         return "article/show";
     }
 
     @PostMapping("/word/add")
     public String addWords(Model model, WordUpdateCommand wordUpdateCommand) {
 
-        logger.info("Word List: " + wordUpdateCommand.getWord());
-
-        SystemUserEntity systemUserEntity = systemUserService.findByLogin(DEFAULT_LOGIN).orElseThrow(() -> new RuntimeException("User not found"));
+        logger.info("Word List: " + wordUpdateCommand.getWords());
 
         ArticleEntity articleEntity = articleService.findById(wordUpdateCommand.getArticleId())
                 .orElseThrow(() -> new IllegalStateException(String.format("It was not found an article with id [%s]", wordUpdateCommand.getArticleId())));
 
+        SystemUserEntity systemUserEntity = systemUserService.findByLogin(DEFAULT_LOGIN)
+                .orElseThrow(() -> new IllegalStateException(String.format("It was not found an User with id [%s]", DEFAULT_LOGIN)));
+
+        wordService.save(wordUpdateCommand.getWords(), articleEntity.getLanguageEntity(), systemUserEntity);
+
         model.addAttribute("article", articleEntity);
-        model.addAttribute("words", getUntreatedWords(articleEntity, wordService.findBySystemUser(systemUserEntity)));
+        model.addAttribute("words", wordCompoundService.getUntreatedWords(articleEntity, DEFAULT_LOGIN));
         return "article/show";
     }
 
-    private List<WordCountBean> getUntreatedWords(ArticleEntity articleEntity, List<WordEntity> wordEntityList) {
-        return count(Arrays.stream(articleEntity.getContent().split("\\s|“|”|\\.|,|’|–|'|‘|:|\\(|\\)"))
-                .filter(s -> (s != null) && (s.trim().length() > 0))
-                .map(s -> s.trim().toUpperCase())
-                .filter(s -> !wordEntityList.stream().map(WordEntity::getWord).filter(word -> word.equalsIgnoreCase(s)).findAny().isPresent())
-                .collect(Collectors.toList()));
-    }
-
-    private List<WordCountBean> count(List<String> wordList) {
-        Map<String, WordCountBean> map = new TreeMap<>();
-
-        for (String word : wordList) {
-            WordCountBean wordCountBean = map.get(word);
-
-            if (wordCountBean == null) {
-                wordCountBean = new WordCountBean();
-                wordCountBean.setWord(word);
-                wordCountBean.setCount(1);
-                map.put(word, wordCountBean);
-            }
-            else {
-                wordCountBean.setCount(wordCountBean.getCount() + 1);
-            }
-        }
-
-        return map.values().stream().sorted(Comparator.comparing(WordCountBean::getCount).reversed()).collect(Collectors.toList());
-    }
 }

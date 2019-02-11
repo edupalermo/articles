@@ -19,6 +19,10 @@ public class ArticleService {
         return articlePersistence.findAll();
     }
 
+    public List<ArticleEntity> findByLanguageIdSystemUserLogin(Long languageId, String systemUserLogin) {
+        return articlePersistence.findByLanguageIdSystemUserLogin(languageId, systemUserLogin);
+    }
+
     public ArticleEntity save(ArticleEntity articleBean) {
         return articlePersistence.save(articleBean);
     }
