@@ -24,11 +24,15 @@
             <tr>
                 <td>Delete</td>
                 <td>Title</td>
+                <td>Know Words</td>
+                <td>Words</td>
                 <td>Created</td>
             </tr>
             <tr th:each="article : ${articles}">
                 <td><input type="checkbox" name="id" th:value="${article.id}"></td>
                 <td><a th:href="'show?id=' + ${article.id}" th:text="${article.title}" /></td>
+                <td align="right" th:text="${article.coveredWords}"></td>
+                <td align="right" th:text="${article.totalWords}"></td>
                 <td th:text="${#temporals.format(article.created, 'dd-MM-yyyy HH:mm:ss')}">Created</td>
             </tr>
         </table>

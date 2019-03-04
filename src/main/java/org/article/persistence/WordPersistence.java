@@ -41,11 +41,6 @@ public class WordPersistence {
         return wordEntity;
     };
 
-    public List<WordEntity> find(SystemUserEntity systemUserEntity) {
-        Object[] args = new Object[] {systemUserEntity.getId()};
-        return jdbcTemplate.query("SELECT ID, LANGUAGE_ID, SYSTEM_USER_ID, WORD, CREATED FROM WORD where SYSTEM_USER_ID = ?", args, rowMapper);
-    }
-
     public Optional<WordEntity> find(LanguageEntity languageEntity, SystemUserEntity systemUserEntity, String word) {
         Object[] args = new Object[] {languageEntity.getId(), systemUserEntity.getId(), word};
         return Optional.of(jdbcTemplate.queryForObject("SELECT ID, LANGUAGE_ID, SYSTEM_USER_ID, WORD, CREATED FROM WORD where LANGUAGE_ID = ? and SYSTEM_USER_ID = ? and WORD = ?", args, rowMapper));

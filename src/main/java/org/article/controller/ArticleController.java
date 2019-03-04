@@ -2,6 +2,7 @@ package org.article.controller;
 
 import org.article.Application;
 import org.article.compoundservice.WordCompoundService;
+import org.article.controller.bean.ArticleStatisticsBean;
 import org.article.controller.command.ArticleCreateCommand;
 import org.article.controller.command.ArticleListCommand;
 import org.article.controller.command.WordUpdateCommand;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/article")
@@ -87,14 +89,20 @@ public class ArticleController {
 
     @GetMapping("/list")
     public String getList(Model model, ArticleListCommand articleListCommand) {
-        model.addAttribute("articles", articleService.findByLanguageIdSystemUserLogin(articleListCommand.getLanguageId(), DEFAULT_LOGIN));
+        List<ArticleStatisticsBean> articleStatistics = articleService.findByLanguageIdSystemUserLogin(articleListCommand.getLanguageId(), DEFAULT_LOGIN)
+                .stream().map(articleEntity -> wordCompoundService.gatherStatistics(articleEntity, DEFAULT_LOGIN)).collect(Collectors.toList());
+
+        model.addAttribute("articles", articleStatistics);
         model.addAttribute("form", new ArticleListCommand());
         return "article/list";
     }
 
     @PostMapping("/list")
     public String postList(Model model, ArticleListCommand articleListCommand) {
-        model.addAttribute("articles", articleService.findByLanguageIdSystemUserLogin(articleListCommand.getLanguageId(), DEFAULT_LOGIN));
+        List<ArticleStatisticsBean> articleStatistics = articleService.findByLanguageIdSystemUserLogin(articleListCommand.getLanguageId(), DEFAULT_LOGIN)
+                .stream().map(articleEntity -> wordCompoundService.gatherStatistics(articleEntity, DEFAULT_LOGIN)).collect(Collectors.toList());
+
+        model.addAttribute("articles", articleStatistics);
         model.addAttribute("form", new ArticleListCommand());
         return "article/list";
     }

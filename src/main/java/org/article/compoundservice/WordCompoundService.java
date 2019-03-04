@@ -25,12 +25,12 @@ public class WordCompoundService {
 
     public List<WordCountBean> getUntreatedWords(ArticleEntity articleEntity, String systemUserLogin) {
         SystemUserEntity systemUserEntity = systemUserService.findByLogin(systemUserLogin).orElseThrow(() -> new IllegalStateException(String.format("Unknown user [%s]", systemUserLogin)));
-        return getUntreatedWords(articleEntity, wordService.findBySystemUser(systemUserEntity));
+        return getUntreatedWords(articleEntity, wordService.findKnownWords(articleEntity.getLanguageEntity().getId(), systemUserLogin));
 
     }
 
     private List<WordCountBean> getUntreatedWords(ArticleEntity articleEntity, List<WordEntity> wordEntityList) {
-        return count(Arrays.stream(articleEntity.getContent().split("\\s|“|”|\\.|,|’|–|'|‘|:|\\(|\\)"))
+        return count(Arrays.stream(articleEntity.getContent().split("\\s|“|”|\"|\\.|,|’|–|-|'|‘|:|/|\\(|\\)"))
                 .filter(s -> (s != null) && (s.trim().length() > 0))
                 .map(s -> s.trim().toUpperCase())
                 .filter(s -> !wordEntityList.stream().map(WordEntity::getWord).filter(word -> word.equalsIgnoreCase(s)).findAny().isPresent())
@@ -67,24 +67,20 @@ public class WordCompoundService {
     private List<String> removeKnownWords(List<String> allWords, Long languageId, String systemUserLogin) {
         List<WordEntity> knownWords = wordService.findKnownWords(languageId, systemUserLogin);
 
-        return 
-
-        return Arrays.stream(articleEntity.getContent().split("\\s|“|”|\\.|,|’|–|'|‘|:|\\(|\\)"))
-                .filter(s -> (s != null) && (s.trim().length() > 0))
-                .map(s -> s.trim().toUpperCase())
-                .collect(Collectors.toList());
+        return allWords.stream().filter(word -> !knownWords.stream().filter(know -> know.getWord().equals(word)).findAny().isPresent()).collect(Collectors.toList());
     }
 
     public ArticleStatisticsBean gatherStatistics(ArticleEntity articleEntity, String systemUserLogin) {
 
-        List<String> words = getWords(articleEntity);
+        List<String> allWords = getWords(articleEntity);
+        List<String> unknownWords = removeKnownWords(allWords, articleEntity.getLanguageEntity().getId(), systemUserLogin);
 
         ArticleStatisticsBean articleStatisticsBean = new ArticleStatisticsBean();
         articleStatisticsBean.setId(articleEntity.getId());
         articleStatisticsBean.setTitle(articleEntity.getTitle());
-        articleStatisticsBean.setTotalWords(words.size());
-        articleStatisticsBean.setCoveredWords();
-        articleStatisticsBean.setUnknownWords();
+        articleStatisticsBean.setTotalWords(allWords.size());
+        articleStatisticsBean.setCoveredWords(allWords.size() - unknownWords.size());
+        articleStatisticsBean.setUnknownWords(unknownWords.size());
         articleStatisticsBean.setCreated(articleEntity.getCreated());
 
         return articleStatisticsBean;

@@ -19,12 +19,8 @@ public class WordService {
     @Autowired
     private WordPersistence wordPersistence;
 
-    public List<WordEntity> findBySystemUser(SystemUserEntity systemUserEntity) {
-        return wordPersistence.find(systemUserEntity);
-    }
-
     public List<WordEntity> findKnownWords(Long languageId, String systemUserLogin) {
-        return wordPersistence.find(systemUserEntity);
+        return wordPersistence.find(languageId, systemUserLogin);
     }
 
     public List<WordEntity> save(String[] words, LanguageEntity languageEntity, SystemUserEntity systemUserEntity) {
