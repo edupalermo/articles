@@ -17,13 +17,13 @@ public class ParameterPersistence {
     private RowMapper<ParameterEntity> rowMapper = (rs, i) -> {
         ParameterEntity parameterEntity = new ParameterEntity();
         parameterEntity.setId(rs.getLong("ID"));
-        parameterEntity.setKey(rs.getString("KEY"));
+        parameterEntity.setName(rs.getString("NAME"));
         parameterEntity.setValue(rs.getString("VALUE"));
         return parameterEntity;
     };
 
     public Optional<ParameterEntity> findByKey(String key) {
-        String query = "SELECT ID, KEY, VALUE FROM TBL_PARAMETER WHERE KEY = ?";
+        String query = "SELECT ID, NAME, VALUE FROM TBL_PARAMETER WHERE KEY = ?";
         Object[] parameters = new Object[]{key};
         return Optional.ofNullable(this.jdbcTemplate.queryForObject(query, rowMapper, parameters));
     }
