@@ -4,6 +4,21 @@
         xmlns:th="http://www.thymeleaf.org"
         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
         layout:decorate="~{layout}">
+
+<head>
+
+    <script>
+
+        function create() {
+            console.log("Clicou!");
+            location.href = "/article/create";
+        }
+
+    </script>
+
+</head>
+
+
 <body>
     <section layout:fragment="content">
         <form action="/article/list"  method="post" th:object="${form}">
@@ -40,6 +55,8 @@
         <p th:if="${#lists.isEmpty(articles)}">There is no article available for this language and user!</p>
 
         <a href="/article/create">CREATE</a>
+        <button onclick="create()" >CREATE</button>
+        <button onclick="location.href = '/article/create';" >DELETE</button>
 
         </form>
     </section>
