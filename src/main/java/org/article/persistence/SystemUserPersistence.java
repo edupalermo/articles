@@ -28,13 +28,13 @@ public class SystemUserPersistence {
     };
 
     public Optional<SystemUserEntity> findByLogin(String login) {
-        String query = "SELECT ID, LOGIN, PASSWORD FROM SYSTEM_USER WHERE LOGIN = ?";
+        String query = "SELECT ID, LOGIN, PASSWORD FROM TBL_SYSTEM_USER WHERE LOGIN = ?";
         Object[] parameters = new Object[]{login};
         return Optional.ofNullable(this.jdbcTemplate.queryForObject(query, rowMapper, parameters));
     }
 
     public Optional<SystemUserEntity> findById(Long id) {
-        String query = "SELECT ID, LOGIN, PASSWORD FROM SYSTEM_USER WHERE ID = ?";
+        String query = "SELECT ID, LOGIN, PASSWORD FROM TBL_SYSTEM_USER WHERE ID = ?";
         Object[] parameters = new Object[]{id};
         return Optional.ofNullable(this.jdbcTemplate.queryForObject(query, rowMapper, parameters));
     }

@@ -43,20 +43,20 @@ public class WordPersistence {
 
     public Optional<WordEntity> find(LanguageEntity languageEntity, SystemUserEntity systemUserEntity, String word) {
         Object[] args = new Object[] {languageEntity.getId(), systemUserEntity.getId(), word};
-        return Optional.of(jdbcTemplate.queryForObject("SELECT ID, LANGUAGE_ID, SYSTEM_USER_ID, WORD, CREATED FROM WORD where LANGUAGE_ID = ? and SYSTEM_USER_ID = ? and WORD = ?", args, rowMapper));
+        return Optional.of(jdbcTemplate.queryForObject("SELECT ID, LANGUAGE_ID, SYSTEM_USER_ID, WORD, CREATED FROM TBL_WORD where LANGUAGE_ID = ? and SYSTEM_USER_ID = ? and WORD = ?", args, rowMapper));
     }
 
     public List<WordEntity> find(Long languageId, String systemUserLogin) {
         Object[] args = new Object[] {languageId, systemUserLogin};
         return jdbcTemplate.query("SELECT w.* FROM " +
-                " WORD w " +
-                " INNER JOIN SYSTEM_USER u ON w.SYSTEM_USER_ID = u.ID " +
+                " TBL_WORD w " +
+                " INNER JOIN TBL_SYSTEM_USER u ON w.SYSTEM_USER_ID = u.ID " +
                 " WHERE w.LANGUAGE_ID = ? and u.LOGIN = ?", args, rowMapper);
     }
 
     public WordEntity save(WordEntity wordEntity) {
         Object[] args = new Object[] { wordEntity.getLanguageEntity().getId(), wordEntity.getSystemUserEntity().getId(), wordEntity.getWord()};
-        jdbcTemplate.update("INSERT INTO WORD (LANGUAGE_ID, SYSTEM_USER_ID, WORD) VALUES (?, ?, ?)", args);
+        jdbcTemplate.update("INSERT INTO TBL_WORD (LANGUAGE_ID, SYSTEM_USER_ID, WORD) VALUES (?, ?, ?)", args);
         return find(wordEntity.getLanguageEntity(), wordEntity.getSystemUserEntity(), wordEntity.getWord()).orElseThrow(() -> new RuntimeException("Fail to insert into table"));
     }
 

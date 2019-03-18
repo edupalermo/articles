@@ -23,7 +23,7 @@ public class ParameterPersistence {
     };
 
     public Optional<ParameterEntity> findByKey(String key) {
-        String query = "SELECT ID, KEY, VALUE FROM PARAMETER WHERE KEY = ?";
+        String query = "SELECT ID, KEY, VALUE FROM TBL_PARAMETER WHERE KEY = ?";
         Object[] parameters = new Object[]{key};
         return Optional.ofNullable(this.jdbcTemplate.queryForObject(query, rowMapper, parameters));
     }

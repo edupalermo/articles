@@ -31,7 +31,7 @@ public class ArticlePersistence {
             articleEntity.setId(Long.valueOf(rs.getLong("ID")));
             articleEntity.setReference(rs.getString("REFERENCE"));
             articleEntity.setContent(rs.getString("CONTENT"));
-            articleEntity.setIdPublic(Boolean.valueOf(rs.getBoolean("PUBLIC")));
+            articleEntity.setIdPublic(Boolean.valueOf(rs.getBoolean("IS_PUBLIC")));
             articleEntity.setCreated(rs.getTimestamp("CREATED").toLocalDateTime());
             articleEntity.setTitle(rs.getString("TITLE"));
             articleEntity.setLanguageEntity(languagePersistence.findById(rs.getLong("LANGUAGE_ID")).orElseThrow(() -> new IllegalStateException("Database inconsistency!")));
@@ -50,25 +50,25 @@ public class ArticlePersistence {
         params[4] = articleEntity.getContent();
         params[5] = articleEntity.getReference();
 
-        jdbcTemplate.update("INSERT INTO ARTICLE (LANGUAGE_ID, SYSTEM_USER_ID, TITLE, PUBLIC, CONTENT, REFERENCE) VALUES (?, ?, ?, ?, ?, ?)", params);
+        jdbcTemplate.update("INSERT INTO TBL_ARTICLE (LANGUAGE_ID, SYSTEM_USER_ID, TITLE, IS_PUBLIC, CONTENT, REFERENCE) VALUES (?, ?, ?, ?, ?, ?)", params);
         return null;
     }
 
     public List<ArticleEntity> findAll() {
-        String sql = "SELECT ID, LANGUAGE_ID, SYSTEM_USER_ID, TITLE, PUBLIC, CONTENT, REFERENCE, CREATED FROM ARTICLE";
+        String sql = "SELECT ID, LANGUAGE_ID, SYSTEM_USER_ID, TITLE, IS_PUBLIC, CONTENT, REFERENCE, CREATED FROM TBL_ARTICLE";
         return jdbcTemplate.query(sql, rowMapper);
     }
 
     public Optional<ArticleEntity> findById(Long articleId) {
-        String sql = "SELECT ID, LANGUAGE_ID, SYSTEM_USER_ID, TITLE, PUBLIC, CONTENT, REFERENCE, CREATED FROM ARTICLE WHERE ID = ?";
+        String sql = "SELECT ID, LANGUAGE_ID, SYSTEM_USER_ID, TITLE, IS_PUBLIC, CONTENT, REFERENCE, CREATED FROM TBL_ARTICLE WHERE ID = ?";
         Object args[] = new Object[] {articleId};
         return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, args));
     }
 
     public List<ArticleEntity> findByLanguageIdSystemUserLogin(Long languageId, String systemUserLogin) {
-        String sql = "SELECT a.ID, a.LANGUAGE_ID, a.SYSTEM_USER_ID, a.TITLE, a.PUBLIC, a.CONTENT, a.REFERENCE, a.CREATED FROM " +
-                " ARTICLE a " +
-                " inner join SYSTEM_USER u ON a.SYSTEM_USER_ID = u.ID " +
+        String sql = "SELECT a.ID, a.LANGUAGE_ID, a.SYSTEM_USER_ID, a.TITLE, a.IS_PUBLIC, a.CONTENT, a.REFERENCE, a.CREATED FROM " +
+                " TBL_ARTICLE a " +
+                " inner join TBL_SYSTEM_USER u ON a.SYSTEM_USER_ID = u.ID " +
                 " where " +
                 "     a.LANGUAGE_ID = ? " +
                 " and u.LOGIN = ?";

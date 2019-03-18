@@ -28,11 +28,11 @@ public class LanguagePersistence {
     };
 
     public List<LanguageEntity> findAll() {
-        return this.jdbcTemplate.query("SELECT ID, NAME FROM LANGUAGE", rowMapper);
+        return this.jdbcTemplate.query("SELECT ID, NAME FROM TBL_LANGUAGE", rowMapper);
     }
 
     public Optional<LanguageEntity> findById(Long id) {
-        String query = "SELECT ID, NAME FROM LANGUAGE WHERE ID = ?";
+        String query = "SELECT ID, NAME FROM TBL_LANGUAGE WHERE ID = ?";
         Object[] parameters = new Object[]{id};
         return Optional.ofNullable(this.jdbcTemplate.queryForObject(query, rowMapper, parameters));
     }

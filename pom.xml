@@ -17,6 +17,7 @@
         <thymeleaf-layout-dialect.version>2.0.5</thymeleaf-layout-dialect.version>
         <thymeleaf.version>3.0.9.RELEASE</thymeleaf.version>
         <java.version>1.8</java.version>
+        <derby.version>10.14.2.0</derby.version>
     </properties>
 
     <dependencies>
@@ -54,10 +55,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>9.4.1211</version>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derbyclient</artifactId>
+            <version>${derby.version}</version>
         </dependency>
+
 
     </dependencies>
 
